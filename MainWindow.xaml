@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuickCalc"
         xmlns:views="clr-namespace:QuickCalc.Views"
-        mc:Ignorable="d" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        mc:Ignorable="d"
+        WindowStyle="None"
         Height="300" Width="400"
         ResizeMode = "NoResize"
         Background = "#272537"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
-        PreviewLostKeyboardFocus="Window_PreviewLostKeyboardFocus">
+        Deactivated="Window_Deactivated"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,7 +21,6 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <views:MenuBar/>
-        <views:CalculatorView
-            Grid.Row="1"/>
+        <views:CalculatorView Grid.Row="1"/>
     </Grid>
 </Window>

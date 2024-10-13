@@ -10,8 +10,9 @@ namespace QuickCalc.ViewModels {
         public ICommand CloseApp {  get; }
         public ICommand OpenSettings {  get; }
 
-        public MenuBarVM()
-        {
+        public MenuBarVM() {
+            //CloseApp = new RelayCommand(CloseApplication);
+            //OpenSettings = new RelayCommand(OpenSettingsView);
             
         }
     }

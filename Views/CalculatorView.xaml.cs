@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickCalc.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace QuickCalc.Views
         public CalculatorView()
         {
             InitializeComponent();
+            DataContext = new CalculatorVM();
         }
     }
 }
