@@ -35,7 +35,9 @@
                 Background="#202537"
                 Text="{Binding CalcInput, UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"/>
+                VerticalAlignment="Stretch"
+				PreviewKeyDown="InputBox_PreviewKeyDown"
+				Loaded="InputBox_Loaded"/>
         </ScrollViewer>
     </Grid>
 </UserControl>
