@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json;
 using QuickCalc.Models;
 using QuickCalc.ViewModels;
+using QuickCalc.Views;
 
 namespace QuickCalc
 {
@@ -13,6 +14,7 @@ namespace QuickCalc
         public MainWindow()
         {
             InitializeComponent();
+            MainContent.Content = new CalculatorView();
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {

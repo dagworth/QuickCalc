@@ -20,15 +20,22 @@
             Foreground="White"
             ClipToBounds="True"
             Background="#302537"
-            TextWrapping="Wrap"
+            TextWrapping="NoWrap"
             Text="{Binding CalcOutput}"/>
-        <TextBox
-            BorderThickness="0"
-            Foreground="White"
-            TextWrapping="Wrap"
-            AcceptsReturn="True"
-            VerticalScrollBarVisibility="Disabled"
-            Background="#202537"
-            Text="{Binding CalcInput, UpdateSourceTrigger=PropertyChanged}"/>
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Hidden"
+            PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <TextBox
+                Name="InputBox"
+                BorderThickness="0"
+                Foreground="White"
+                TextWrapping="Wrap"
+                AcceptsReturn="True"
+                Background="#202537"
+                Text="{Binding CalcInput, UpdateSourceTrigger=PropertyChanged}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>

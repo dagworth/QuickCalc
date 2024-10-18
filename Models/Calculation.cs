@@ -11,23 +11,24 @@ namespace QuickCalc.Models {
         //almost all useless, i wanna find a way to remove these cus ugly
         private static readonly char[] numbers = ['1','2','3','4','5','6','7','8','9','0','.'];
         private static readonly char[] valid_start = ['1','2','3','4','5','6','7','8','9','0','.', '('];
+        private static readonly char[] valid_middle = ['1','2','3','4','5','6','7','8','9','0','.','(',')','+','-','*','/','^'];
         private static readonly char[] valid_end = ['1','2','3','4','5','6','7','8','9','0',')'];
-        
+
         //gets the distance of the index of the next number from the current position
         private static int LengthNextNum(string equation, int start){
             for(int i = start; i < equation.Length; i++){
                 char c = equation[i];
-        
+
                 //edge cases
                 if(i == start){
                     if(c == '-'){ //in case of 5*-7, negative right after operation, it will still count as a number
                         continue;
-                    } else if (vars.ContainsKey(c)){ //if its a variable, then only have the variable be the number
+                    } else if(vars.ContainsKey(c)){ //if its a variable, then only have the variable be the number
                         return 1;
                     }
                 }
-
-                if(!numbers.Contains(c)){ //if the currenet variable isnt a number, return how long it has been while it was a number
+        
+                if(!numbers.Contains(c)){ //if the current variable isnt a number, return how long it has been while it was a number
                     return i-start;
                 }
             }
@@ -47,13 +48,31 @@ namespace QuickCalc.Models {
                 if(operations.Contains(str)){
                     double value = 0;
 
-                    //handles the first negative
-                    //there has to be a better place to write this
-                    if(i == 0 && str.Equals("-") && operations.Contains("-")){
-                        value = -MakeNum(equation_list[i+1]);
-                        equation_list.RemoveRange(0,2);
-                        equation_list.Insert(0,value.ToString());
-                        continue;
+                    //handles using - as negative and not subtracting
+                    //there has to be a better place and way to write this
+                    if(str.Equals("-") && operations.Contains("-")){
+                        if(equation_list[i+1].Equals("-")){
+                            //gets rid of double negatives
+                            equation_list.RemoveRange(i,2);
+                            if(equation_list[i] != "+" || equation_list[i] != "-"){
+                                equation_list.Insert(i,"+");
+                            }
+                            i-=1;
+                            continue;
+                        } else if (i == 0 || equation_list[i-1].Equals("(")){
+                            //makes the next number negative
+                            value = -MakeNum(equation_list[1]);
+                            equation_list.RemoveRange(0,2);
+                            equation_list.Insert(0,value.ToString());
+                            continue;
+                        }
+                    } else if(str.Equals("+")){
+                        //gets rid of adding negatives
+                        if(equation_list[i+1].Equals("-")){
+                            equation_list.RemoveAt(i);
+                            i-=1;
+                            continue;
+                        }
                     }
 
                     double last_num = MakeNum(equation_list[i-1]);
@@ -84,8 +103,7 @@ namespace QuickCalc.Models {
             DoOperation(equation_list,["^"]);
             DoOperation(equation_list,["*","/"]);
             DoOperation(equation_list,["+","-"]);
-            return MakeNum(equation_list[0]).ToString();
-            //equation_list[0]; doesn't work because it doesn't account for equation_list being one variable
+            return Math.Round(MakeNum(equation_list[0]),5).ToString();
         }
 
         //separates each line into tokens to use in calculation
@@ -95,15 +113,20 @@ namespace QuickCalc.Models {
         private static List<string> SeparateLine(string equation){
             List<string> equation_list = new();
             bool last_is_num = false;
+            int last_parentheses = -1;
 
             for(int i = 0; i < equation.Length; i++){
                 char c = equation[i];
 
                 //for operations and parentheses
                 //taking into account when theres a negative number in the middle of the equation
-                if(new char[]{'+','*','/','(',')','^'}.Contains(c) || (c == '-' && (last_is_num || i == 0))){
+                if(new char[]{'+','*','/','(',')','^'}.Contains(c) || (c == '-' && (last_is_num || i-last_parentheses == 1))){
 
-                    if(c == '(' && last_is_num) equation_list.Add("*"); // '(' is the only character here that will result in a number facing left
+                    // '(' is the only character here that will result in a number facing left
+                    if(c == '(' && last_is_num){
+                        equation_list.Add("*");
+                        last_parentheses = i;
+                    }
 
                     equation_list.Add(c.ToString());
                     last_is_num = c == ')'; // ')' is the only character here that will result in a number facing right
@@ -114,24 +137,51 @@ namespace QuickCalc.Models {
 
                     int len = LengthNextNum(equation,i);
                     equation_list.Add(equation.Substring(i,len));
+            
                     i+=len-1;
                 }
             }
 
-            Console.WriteLine(String.Join(" ",equation_list.ToArray()));
+            //Console.WriteLine(string.Join(" ",equation_list.ToArray()));
 
             return equation_list;
         }
 
+        //checks if an equation is valid before evaluating it
+        //i think this function can be rewritten in SeparateLine somehow
         private static string IsValid(string equation){
-            if(!valid_start.Contains(equation[0]) && equation[0] != '-' && !vars.ContainsKey(equation[0])) return "error: not a valid start";
-            if(!valid_end.Contains(equation[equation.Length-1]) && !vars.ContainsKey(equation[equation.Length-1])) return "error: not a valid end";
+            bool check_start = true; //marks when to check if a character is a valid starting character
+            bool last_is_num = false; //marks if the last character was a valid number
+
+            //double .. does not ever equate to a valid statement
+            if(equation.IndexOf("..") != -1) return "error: something wrong at index " + equation.IndexOf("..");
 
             for(int i = 0; i < equation.Length; i++){
-                //error finding that i still need to figure out
-                //donno if i should try doing the check only one time or not
-            }
+                char c = equation[i];
+        
+                if(check_start){ //this checks if all equations are valid at the start, including ()
+                    if(!valid_start.Contains(c) && c != '-' && !vars.ContainsKey(c)) return "error: not a valid start";
+                    check_start = false;
+                }
 
+                //if these operations are after something that isn't a number, then the equation is wrong
+                //- isnt part of it because of the fact that it just makes things more negative
+                if(new char[]{'+','*','/',')','^'}.Contains(c) && !last_is_num) return "error: something is wrong at index " + i;
+
+                //if this character is a number
+                last_is_num = valid_end.Contains(c) || vars.ContainsKey(c);
+        
+                //act like the equation after ( is the start of an equation
+                if(c == '(') check_start = true;
+        
+                //this checks if all equations are valid at the end, including ()
+                if(i+1 == equation.Length || equation[i+1] == ')'){
+                    if(!valid_end.Contains(c) && !vars.ContainsKey(c)) return "error: not a valid end";
+                }
+
+                //determines what can end an equation
+                if(!valid_middle.Contains(c) && !vars.ContainsKey(c)) return "error: " + c + " doesn't exist";
+            }
             return "";
         }
 
@@ -146,25 +196,26 @@ namespace QuickCalc.Models {
             List<string> equation_list = SeparateLine(equation);
 
             //does out the equation in parentheses, given that its a polynomial
-            List<int> open_parentheses = new();
+            List<int> open_parentheses = [];
             for(int i = 0; i < equation_list.Count; i++){
                 string c = equation_list[i];
                 if(c.Equals("(")){
                     open_parentheses.Add(i);
                 } else if (c.Equals(")")){
-                    //get the last open parentheses and removes it from the list
+
                     //is user didnt close the ), put a '(' at the front
-                    if(open_parentheses.Count == 0){ open_parentheses.Insert(0,0); equation_list.Insert(0,"("); i++; };
+                    if(open_parentheses.Count == 0){
+                        open_parentheses.Insert(0,0);
+                        equation_list.Insert(0,"(");
+                        i++;
+                    };
+
+                    //get the last open parentheses and removes it from the list
                     int last = open_parentheses[open_parentheses.Count - 1];
                     open_parentheses.RemoveAt(open_parentheses.Count - 1);
 
                     //do everything in () and replaces it in equation_list
                     List<string> range = equation_list.GetRange(last+1,i-last-1);
-
-                    string range_valid_check = IsValid(String.Join("",equation_list.ToArray()));
-                    if(range_valid_check.Length != 0) return range_valid_check;
-
-                    //ADD ERROR CHECKS HERE
 
                     string result = DoOut(range);
                     equation_list.RemoveRange(last,i-last+1);
@@ -183,17 +234,17 @@ namespace QuickCalc.Models {
         //the function that solves stuff
         public static string Solve(string text){
             vars.Clear();
-            string[] lines = text.Replace(" ", "").ToLower().Split(['\n','\r']);
+            string[] lines = text.Replace(" ", "").ToLower().Split(['\r','\n']);
             string response = "";
             for(int line_index = 0; line_index < lines.Length; line_index++){
-                if(line_index % 2 != 0){ continue; } //only in visual studio cus its weird and it doubles the \n
+                if(line_index % 2 != 0){ continue; } //only in visual studio cus its weird and it doubles the \n with \r
 
                 string line = lines[line_index];
                 string value = "";
 
                 if(line.Length > 2 && line[1] == '='){
-                    value = SolveLine(line.Substring(2));
-                    if (value.StartsWith("error")) vars[line[0]] = value; //error catcher so variables wont be assigned error messages
+                    value = SolveLine(line[2..]);
+                    if (!value.StartsWith("error")) vars[line[0]] = value; //error catcher so variables wont be assigned error messages
                 } else if (line.Length > 0){
                     value = SolveLine(line);
                 }

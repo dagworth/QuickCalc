@@ -9,14 +9,11 @@ using System.Threading.Tasks;
 namespace QuickCalc.ViewModels
 {
     class CalculatorVM : ViewModelBase {
-        private string input = "";
         private string output = "";
 
         public string CalcInput {
-            get { return input; }
             set {
-                input = value;
-                CalcOutput = Calculation.Solve(input); 
+                CalcOutput = Calculation.Solve(value); 
                 OnPropertyChanged(nameof(CalcInput));
              }
         }

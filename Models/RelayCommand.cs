@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace QuickCalc.Models
-{
+namespace QuickCalc.Models {
     public class RelayCommand : ICommand {
         private readonly Action<object?> _execute;
         private readonly Func<object?, bool>? _canExecute;

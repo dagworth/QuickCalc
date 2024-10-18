@@ -17,7 +17,7 @@ namespace QuickCalc.ViewModels {
         }
 
         private void OpenSettingsView(object? parameter) {
-            var mainWindow = (QuickCalc.MainWindow)App.Current.MainWindow;
+            MainWindow mainWindow = (MainWindow)App.Current.MainWindow;
             if (mainWindow != null) {
                 mainWindow.MainContent.Content = new SettingsView(); // Ensure this view is defined
             }
