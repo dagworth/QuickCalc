@@ -10,7 +10,6 @@ namespace QuickCalc.ViewModels
 {
     class CalculatorVM : ViewModelBase {
         private string output = "";
-
         public string CalcInput {
             set {
                 CalcOutput = Calculation.Solve(value); 
