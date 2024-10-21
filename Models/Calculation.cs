@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace QuickCalc.Models {
-    internal static class Calculation {
+    public static class Calculation {
         private static Dictionary<char, string> vars = [];
 
         //almost all useless, i wanna find a way to remove these cus ugly
@@ -103,7 +103,7 @@ namespace QuickCalc.Models {
             DoOperation(equation_list,["^"]);
             DoOperation(equation_list,["*","/"]);
             DoOperation(equation_list,["+","-"]);
-            return Math.Round(MakeNum(equation_list[0]),5).ToString();
+            return MakeNum(equation_list[0]).ToString();
         }
 
         //separates each line into tokens to use in calculation
@@ -234,11 +234,9 @@ namespace QuickCalc.Models {
         //the function that solves stuff
         public static string Solve(string text){
             vars.Clear();
-            string[] lines = text.Replace(" ", "").ToLower().Split(['\r','\n']);
+            string[] lines = text.Replace(" ", "").ToLower().Split("\r\n");
             string response = "";
             for(int line_index = 0; line_index < lines.Length; line_index++){
-                if(line_index % 2 != 0){ continue; } //only in visual studio cus its weird and it doubles the \n with \r
-
                 string line = lines[line_index];
                 string value = "";
 
@@ -248,7 +246,8 @@ namespace QuickCalc.Models {
                 } else if (line.Length > 0){
                     value = SolveLine(line);
                 }
-                response+=value+"\n";
+
+                response+=value+"\r\n";
             }
             return response;
         }
