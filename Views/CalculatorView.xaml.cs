@@ -30,6 +30,7 @@ namespace QuickCalc.Views
         {
             InitializeComponent();
             DataContext = new CalculatorVM();
+            InputBox.Text = Properties.Settings.Default.CurrentText;
         }
 
         //scroll only increments by each line
@@ -76,6 +77,15 @@ namespace QuickCalc.Views
                         }
                     }
                     break;
+                case Key.C: //copy the response, ctrl-shift-C
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.LeftShift)) {
+                        try {
+                            Clipboard.SetText(Response.GetLineText(line).Replace("\r\n",""));
+                        } catch {
+                            MessageBox.Show("ur copy broke again haha");
+                        }
+                    }
+                    break;
             }
         }
 
@@ -85,6 +95,7 @@ namespace QuickCalc.Views
 
         //copy on clipboard for whatever line the user copies from the response box
         private async void Response_GotFocus(object sender, RoutedEventArgs e) {
+            if(Response.Text.Length == 0) { e.Handled = true; InputBox.Focus(); return; } //basically does nothing if there is no input nor response
             int original = InputBox.CaretIndex;
             await Task.Delay(20); //these delays are literally just for the user to see that the copy and paste worked and which line they copied
             
@@ -104,6 +115,10 @@ namespace QuickCalc.Views
             await Task.Delay(20);
             InputBox.Focus(); //put ur cursor back where it was before, idk why u would want it but its an easy feature
             InputBox.CaretIndex = original;
+        }
+
+        private void InputBox_TextChanged(object sender, TextChangedEventArgs e) {
+            Properties.Settings.Default.CurrentText = InputBox.Text;
         }
     }
 }

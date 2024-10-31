@@ -13,15 +13,18 @@ namespace QuickCalc.ViewModels {
         }
 
         private void CloseApplication(object? parameter) {
-            Environment.Exit(0);
+            App.Current.Shutdown();
         }
 
         private void OpenSettingsView(object? parameter) {
             MainWindow mainWindow = (MainWindow)App.Current.MainWindow;
             if (mainWindow != null) {
-                mainWindow.MainContent.Content = new SettingsView(); // Ensure this view is defined
+                if(mainWindow.MainContent.Content is not SettingsView) {
+                    mainWindow.MainContent.Content = new SettingsView();
+                } else {
+                    mainWindow.MainContent.Content = new CalculatorView();
+                }
             }
-            //change calculatorview into settingsview
         }
     }
 }

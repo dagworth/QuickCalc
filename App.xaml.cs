@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Windows;
 
 namespace QuickCalc {
@@ -9,6 +10,11 @@ namespace QuickCalc {
     public partial class App : Application {
         protected override void OnStartup(StartupEventArgs e) {
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e) {
+            QuickCalc.Properties.Settings.Default.Save();
+            base.OnExit(e);
         }
     }
 

@@ -48,6 +48,7 @@
                 Text="{Binding CalcInput, UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
+                TextChanged="InputBox_TextChanged"
 				PreviewKeyDown="InputBox_PreviewKeyDown"
 				Loaded="InputBox_Loaded"/>
         </ScrollViewer>

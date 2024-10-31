@@ -8,7 +8,10 @@
              Background="Gray"
              d:DesignHeight="300" d:DesignWidth="400">
     <Grid>
-        
+        <CheckBox Name="ConsoleDebug_CheckBox" FontWeight="Bold" Foreground="White" Content="Debugger Responses: shows why it can't solve an equation" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ConsoleDebug_CheckBox_Checked" Unchecked="ConsoleDebug_CheckBox_Unchecked"/>
+        <TextBox Name="DigitsRounded" HorizontalAlignment="Left" Margin="10,30,0,0" Text="0" TextAlignment="Center" FontWeight="Bold" VerticalAlignment="Top" Width="39" Height="19" PreviewTextInput="DigitsRounded_PreviewTextInput"/>
+        <TextBlock HorizontalAlignment="Left" Margin="55,31,0,0" FontWeight="Bold" Foreground="White" Text="Digits Rounded: 1-9 digits, 0 for no rounding" VerticalAlignment="Top"/>
+
 
     </Grid>
 </UserControl>
