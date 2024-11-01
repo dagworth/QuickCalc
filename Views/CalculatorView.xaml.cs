@@ -30,8 +30,9 @@ namespace QuickCalc.Views
         {
             InitializeComponent();
             DataContext = new CalculatorVM();
-            InputBox.Text = Properties.Settings.Default.CurrentText;
         }
+
+        public TextBox getInputBox => InputBox;
 
         //scroll only increments by each line
         //this will also update how far down the resulting output string will be, not yet made
@@ -91,13 +92,14 @@ namespace QuickCalc.Views
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e) {
             InputBox.Focus();
+            if(Properties.Settings.Default.SaveText) InputBox.Text = Properties.Settings.Default.CurrentText;
         }
 
         //copy on clipboard for whatever line the user copies from the response box
         private async void Response_GotFocus(object sender, RoutedEventArgs e) {
             if(Response.Text.Length == 0) { e.Handled = true; InputBox.Focus(); return; } //basically does nothing if there is no input nor response
             int original = InputBox.CaretIndex;
-            await Task.Delay(20); //these delays are literally just for the user to see that the copy and paste worked and which line they copied
+            await Task.Delay(75); //these delays are literally just for the user to see that the copy and paste worked and which line they copied
             
             try {
                 int line = Response.GetLineIndexFromCharacterIndex(Response.CaretIndex);
@@ -112,7 +114,7 @@ namespace QuickCalc.Views
                 MessageBox.Show("ur copy and paste broke lmao");
             }
 
-            await Task.Delay(20);
+            await Task.Delay(75);
             InputBox.Focus(); //put ur cursor back where it was before, idk why u would want it but its an easy feature
             InputBox.CaretIndex = original;
         }

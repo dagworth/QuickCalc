@@ -10,11 +10,14 @@ namespace QuickCalc.ViewModels
 {
     class CalculatorVM : ViewModelBase {
         private string output = "";
+        private string input = "";
         public string CalcInput {
+            get { return input; }
             set {
-                CalcOutput = Calculation.Solve(value); 
+                input = value;
+                CalcOutput = Calculation.Solve(input); 
                 OnPropertyChanged(nameof(CalcInput));
-             }
+            }
         }
 
         public string CalcOutput {

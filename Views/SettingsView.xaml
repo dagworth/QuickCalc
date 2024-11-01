@@ -5,12 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuickCalc.Views"
              mc:Ignorable="d"
-             Background="Gray"
+             Background="#202537"
              d:DesignHeight="300" d:DesignWidth="400">
     <Grid>
-        <CheckBox Name="ConsoleDebug_CheckBox" FontWeight="Bold" Foreground="White" Content="Debugger Responses: shows why it can't solve an equation" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ConsoleDebug_CheckBox_Checked" Unchecked="ConsoleDebug_CheckBox_Unchecked"/>
-        <TextBox Name="DigitsRounded" HorizontalAlignment="Left" Margin="10,30,0,0" Text="0" TextAlignment="Center" FontWeight="Bold" VerticalAlignment="Top" Width="39" Height="19" PreviewTextInput="DigitsRounded_PreviewTextInput"/>
-        <TextBlock HorizontalAlignment="Left" Margin="55,31,0,0" FontWeight="Bold" Foreground="White" Text="Digits Rounded: 1-9 digits, 0 for no rounding" VerticalAlignment="Top"/>
+        <CheckBox Name="ConsoleDebug_CheckBox" FontWeight="Bold" Foreground="Gray" Content="Debugger Responses: shows why it can't solve an equation" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ConsoleDebug_CheckBox_Checked" Unchecked="ConsoleDebug_CheckBox_Unchecked"/>
+        <TextBox Name="DigitsRounded" HorizontalAlignment="Left" Margin="10,68,0,0" Text="0" TextAlignment="Center" FontWeight="Bold" VerticalAlignment="Top" Width="39" Height="19" PreviewTextInput="DigitsRounded_PreviewTextInput"/>
+        <TextBlock HorizontalAlignment="Left" Margin="54,68,0,0" FontWeight="Bold" Foreground="Gray" Text="Digits Rounded: 1-9 digits, 0 for no rounding" VerticalAlignment="Top"/>
+        <ComboBox HorizontalAlignment="Center" Margin="0,216,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,195,0,0" FontWeight="Bold" Foreground="Gray" Text="Theme" VerticalAlignment="Top"/>
+        <CheckBox x:Name="SaveText_CheckBox" FontWeight="Bold" Foreground="Gray" Content="Save text from last use" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Checked="SaveText_CheckBox_Checked" Unchecked="SaveText_CheckBox_Unchecked"/>
 
 
     </Grid>

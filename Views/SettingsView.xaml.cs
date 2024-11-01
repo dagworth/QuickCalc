@@ -28,6 +28,7 @@ namespace QuickCalc.Views
         {
             InitializeComponent();
             ConsoleDebug_CheckBox.IsChecked = Properties.Settings.Default.Debugger;
+            SaveText_CheckBox.IsChecked = Properties.Settings.Default.SaveText;
             DigitsRounded.Text = Properties.Settings.Default.Digits_Rounded.ToString();
         }
 
@@ -43,8 +44,21 @@ namespace QuickCalc.Views
             if (int.TryParse(e.Text, out _)) {
                 DigitsRounded.Text = e.Text;
                 Properties.Settings.Default.Digits_Rounded = int.Parse(e.Text);
+                Keyboard.ClearFocus();
             }
             e.Handled = true;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
+        }
+
+        private void SaveText_CheckBox_Checked(object sender, RoutedEventArgs e) {
+            Properties.Settings.Default.SaveText = true;
+        }
+
+        private void SaveText_CheckBox_Unchecked(object sender, RoutedEventArgs e) {
+            Properties.Settings.Default.SaveText = false;
         }
     }
 }

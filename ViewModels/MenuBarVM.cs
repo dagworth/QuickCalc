@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using QuickCalc.Models;
 using QuickCalc.Views;
 
@@ -22,7 +23,12 @@ namespace QuickCalc.ViewModels {
                 if(mainWindow.MainContent.Content is not SettingsView) {
                     mainWindow.MainContent.Content = new SettingsView();
                 } else {
-                    mainWindow.MainContent.Content = new CalculatorView();
+                    //make the history save after closing settings
+                    CalculatorView new_calc_window = new CalculatorView();
+                    mainWindow.MainContent.Content = new_calc_window;
+                    new_calc_window.getInputBox.Loaded += (sender, e) => {
+                        new_calc_window.getInputBox.Text = Properties.Settings.Default.CurrentText;
+                    };
                 }
             }
         }

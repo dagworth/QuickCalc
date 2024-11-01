@@ -11,7 +11,7 @@ namespace QuickCalc.Models {
         //almost all useless, i wanna find a way to remove these cus ugly
         private static readonly char[] numbers = ['1','2','3','4','5','6','7','8','9','0','.'];
         private static readonly char[] valid_start = ['1','2','3','4','5','6','7','8','9','0','.', '('];
-        private static readonly char[] valid_middle = ['1','2','3','4','5','6','7','8','9','0','.','(',')','+','-','*','/','^'];
+        private static readonly char[] valid_middle = ['1','2','3','4','5','6','7','8','9','0','.','(',')','+','-','*','/','^','%'];
         private static readonly char[] valid_end = ['1','2','3','4','5','6','7','8','9','0',')'];
 
         //gets the distance of the index of the next number from the current position
@@ -80,6 +80,8 @@ namespace QuickCalc.Models {
 
                     if(str.Equals("^")){
                         value = Math.Pow(last_num,next_num);
+                    } else if (str.Equals("%")) {
+                        value = last_num%next_num;
                     } else if (str.Equals("*")){
                         value = last_num*next_num;
                     } else if (str.Equals("/")){
@@ -100,7 +102,7 @@ namespace QuickCalc.Models {
 
         //this will always evaluate equation_list into a single number
         private static string DoOut(List<string> equation_list){
-            DoOperation(equation_list,["^"]);
+            DoOperation(equation_list,["^","%"]);
             DoOperation(equation_list,["*","/"]);
             DoOperation(equation_list,["+","-"]);
             return MakeNum(equation_list[0]).ToString();
@@ -120,7 +122,7 @@ namespace QuickCalc.Models {
 
                 //for operations and parentheses
                 //taking into account when theres a negative number in the middle of the equation
-                if(new char[]{'+','*','/','(',')','^'}.Contains(c) || (c == '-' && (last_is_num || i-last_parentheses == 1))){
+                if(new char[]{'+','*','/','(',')','^','%'}.Contains(c) || (c == '-' && (last_is_num || i-last_parentheses == 1))){
 
                     // '(' is the only character here that will result in a number facing left
                     if(c == '(' && last_is_num){
@@ -166,7 +168,7 @@ namespace QuickCalc.Models {
 
                 //if these operations are after something that isn't a number, then the equation is wrong
                 //- isnt part of it because of the fact that it just makes things more negative
-                if(new char[]{'+','*','/',')','^'}.Contains(c) && !last_is_num) return "error: something is wrong at index " + i;
+                if(new char[]{'+','*','/',')','^','%'}.Contains(c) && !last_is_num) return "error: something is wrong at index " + i;
 
                 //if this character is a number
                 last_is_num = valid_end.Contains(c) || vars.ContainsKey(c);
