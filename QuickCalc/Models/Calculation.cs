@@ -37,6 +37,7 @@ namespace QuickCalc.Models {
 
         //makes the str into a number, takes into account variables
         private static double MakeNum(string str){
+            if(str.Equals("-0")) return 0; //for some reason, -0 is different from 0
             if(vars.ContainsKey(str[0])) str = vars[str[0]];
             return double.Parse(str);
         }
@@ -62,12 +63,12 @@ namespace QuickCalc.Models {
                         } else if (i == 0 || equation_list[i-1].Equals("(")){
                             //makes the next number negative
                             value = -MakeNum(equation_list[1]);
-                            equation_list.RemoveRange(0,2);
-                            equation_list.Insert(0,value.ToString());
+                            equation_list.RemoveRange(i,i+2);
+                            equation_list.Insert(i,value.ToString());
                             continue;
                         }
                     } else if(str.Equals("+")){
-                        //gets rid of adding negatives
+                        //gets rid of adding negatives and changes it into subtracting
                         if(equation_list[i+1].Equals("-")){
                             equation_list.RemoveAt(i);
                             i-=1;
@@ -150,7 +151,6 @@ namespace QuickCalc.Models {
         }
 
         //checks if an equation is valid before evaluating it
-        //i think this function can be rewritten in SeparateLine somehow
         private static string IsValid(string equation){
             bool check_start = true; //marks when to check if a character is a valid starting character
             bool last_is_num = false; //marks if the last character was a valid number

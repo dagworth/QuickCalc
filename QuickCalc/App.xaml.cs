@@ -13,6 +13,7 @@ namespace QuickCalc {
         }
 
         protected override void OnExit(ExitEventArgs e) {
+            if (!QuickCalc.Properties.Settings.Default.SaveText) QuickCalc.Properties.Settings.Default.CurrentText = "";
             QuickCalc.Properties.Settings.Default.Save();
             base.OnExit(e);
         }
